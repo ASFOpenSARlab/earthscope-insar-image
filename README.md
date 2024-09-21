@@ -18,12 +18,12 @@ operating system:
 This image is also available on the GitHub Container Registry. Pull it onto your
 computer with
 ```bash
-docker pull ghcr.io/asfopensarlab/earthscope-insar-2024--image:main
+docker pull ghcr.io/asfopensarlab/earthscope-insar-image:main
 ```
 
 you can then run the image with
 ```bash
-docker run -it --init --rm -p 8888:8888 -v $HOME/virtual_home:/home/jovyan ghcr.io/asfopensarlab/earthscope-insar-2024--image:main
+docker run -it --init --rm -p 8888:8888 -v $HOME/virtual_home:/home/jovyan ghcr.io/asfopensarlab/earthscope-insar-image:main
 ```
 
 Click the `127.0.0.1:8888` link that appears, and you should be able to access the image.
