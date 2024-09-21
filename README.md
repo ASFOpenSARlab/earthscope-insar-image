@@ -1,4 +1,4 @@
-# GEOS639 Docker Image
+# EarthScope InSAR Docker Image
 
 ## Quickstart
 
