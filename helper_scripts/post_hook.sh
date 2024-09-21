@@ -4,18 +4,16 @@ set -ve
 # Get python version
 PYTHON_VER=$(python -c "import sys; print(f\"python{sys.version_info.major}.{sys.version_info.minor}\")")
 
-python /etc/singleuser/others/check_storage.py $1
-
 # Add Path to local pip execs.
 export PATH=$HOME/.local/bin:$PATH
 
-python /etc/singleuser/hooks/etc/pkg_clean.py
+python /tmp/helper_scripts/pkg_clean.py
 
 python -m pip install --user nbgitpuller
 
 # copy over our version of pull.py
 # REMINDER: REMOVE IF CHANGES ARE MERGED TO NBGITPULLER
-cp /etc/singleuser/hooks/etc/pull.py /home/jovyan/.local/lib/$PYTHON_VER/site-packages/nbgitpuller/pull.py
+cp /tmp/helper_scripts/pull.py /home/jovyan/.local/lib/$PYTHON_VER/site-packages/nbgitpuller/pull.py
 
 # Disable the extension manager in Jupyterlab since server extensions are uninstallable
 # by users and non-server extension installs do not persist over server restarts
@@ -65,14 +63,15 @@ envs_dirs:
 EOT
 fi
 
-KERNELS=$HOME/.local/share/jupyter/kernels
-OLD_KERNELS=$HOME/.local/share/jupyter/kernels_old
-FLAG=$HOME/.jupyter/old_kernels_flag.txt
-if ! test -f "$FLAG" && test -d "$KERNELS"; then
-cp /etc/singleuser/hooks/etc/old_kernels_flag.txt $HOME/.jupyter/old_kernels_flag.txt
-mv $KERNELS $OLD_KERNELS
-cp /etc/singleuser/hooks/etc/kernels_rename_README $OLD_KERNELS/kernels_rename_README
-fi
+# TODO: remove this?
+#KERNELS=$HOME/.local/share/jupyter/kernels
+#OLD_KERNELS=$HOME/.local/share/jupyter/kernels_old
+#FLAG=$HOME/.jupyter/old_kernels_flag.txt
+#if ! test -f "$FLAG" && test -d "$KERNELS"; then
+#cp /etc/singleuser/hooks/etc/old_kernels_flag.txt $HOME/.jupyter/old_kernels_flag.txt
+#mv $KERNELS $OLD_KERNELS
+#cp /etc/singleuser/hooks/etc/kernels_rename_README $OLD_KERNELS/kernels_rename_README
+#fi
 
 # Add a CondaKernelSpecManager section to jupyter_notebook_config.json to display nicely formatted kernel names
 JN_CONFIG=$HOME/.jupyter/jupyter_notebook_config.json

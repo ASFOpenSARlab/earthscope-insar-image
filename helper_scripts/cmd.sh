@@ -1,7 +1,7 @@
 # RUN as jovyan
 
 # Startup scripts
-bash /etc/singleuser/hooks/earthscope_insar.sh
+bash /tmp/helper_scripts/post_hook.sh
 
 # Start notebook server
 bash /usr/local/bin/start-notebook.sh

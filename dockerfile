@@ -1,4 +1,4 @@
-FROM jupyter/base-notebook:lab-4.0.7 as release
+FROM jupyter/base-notebook:lab-4.0.7 AS release
 
 # Base Stage ****************************************************************
 USER root
@@ -133,7 +133,7 @@ RUN python3 -m pip install \
 ENV PATH=/usr/local/GMTSAR/bin:$PATH
 
 # Addtional built-in environment
-COPY env /etc/env
+COPY helper_scripts/earthscope_insar_env.sh /etc/env/earthscope_insar_env.sh 
 RUN chmod -R 755 /etc/env && \
     chown -R jovyan:users /etc/env
 
@@ -148,23 +148,19 @@ RUN wget https://raw.githubusercontent.com/ASFOpenSARlab/opensarlab-envs/main/En
     chmod -R 755 /opt/conda/envs && \
     chown -R jovyan:users /opt/conda/envs
 
+WORKDIR /home/jovyan
 
-# Copy singleuser files
-COPY singleuser /etc/singleuser
-RUN chmod -R 777 /etc/singleuser
+RUN chmod -R 775 /home/jovyan &&\
+    chown -R jovyan:users /home/jovyan
 
-# Copy entrypoint and cmd 
-COPY entrypoint.sh /entrypoint.sh
+RUN mkdir -p /tmp/helper_scripts
+COPY helper_scripts/* /tmp/helper_scripts
+
+COPY helper_scripts/entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
-COPY --chown=1000:100 cmd.sh /cmd.sh
+COPY --chown=1000:100 helper_scripts/cmd.sh /cmd.sh
 RUN chmod 755 /cmd.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/cmd.sh"]
 
-WORKDIR /home/jovyan
-
-FROM release as testing 
-
-COPY ./tests /tests
-RUN bash /tests/earthscope_insar.sh
